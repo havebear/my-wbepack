@@ -5,6 +5,8 @@ import traverse from '@babel/traverse'
 import ejs from 'ejs'
 import { transformFromAst } from 'babel-core'
 
+let id = 0
+
 // console.log(traverse)
 
 /**
@@ -49,7 +51,9 @@ function createAsset (filePath) {
   return {
     filePath,
     code,
-    deps
+    deps,
+    mapping: {},
+    id: id++
   }
 }
 
@@ -69,6 +73,7 @@ function createGraph () {
   for (const asset of queue) {
     asset.deps.forEach(relativePath => {
       const temp = createAsset(path.resolve('./example', relativePath))
+      asset.mapping[relativePath] = temp.id
       queue.push(temp)
     })
   }
@@ -87,10 +92,11 @@ function build (graph) {
 
   const template = fs.readFileSync('./bundle.ejs', { encoding: 'utf-8' })
   // 模板数据
-  const data = graph.map(({ filePath, code }) => {
+  const data = graph.map(({ id, code, mapping }) => {
     return {
-      filePath,
-      code
+      id,
+      code,
+      mapping
     }
   })
   const code = ejs.render(template, { data })

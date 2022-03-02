@@ -1,33 +1,45 @@
 (function (modules) {
-  function require (filePath) {
-    const fn = modules[filePath]
+  function require (id) {
+    const [ fn, mapping ] = modules[id]
+    
     const module = {
       exports: {}
     }
 
-    fn (require, module, module.exports)
+    function localRequire (filePath) {
+      const id = mapping[filePath]
+      return require(id)
+    }
+
+    fn (localRequire, module, module.exports)
 
     return module.exports
   }
 
-  require('./main.js')
+  require(1)
 })({
-  './foo.js': function (require, module, exports) {
-    function foo () {
-      console.log('foo')
-    }
-
-    module.exports = {
-      foo
-    }
-  },
-  './bar.js': function (require, module, exports) {
-    function bar () {
-      console.log('bar')
-    }
-
-    module.exports = {
-      bar
-    }
-  }
+  1: [
+    function (require, module, exports) {
+      function foo () {
+        console.log('foo')
+      }
+  
+      module.exports = {
+        foo
+      }
+    },
+    {}
+  ],
+  2: [
+    function (require, module, exports) {
+      function bar () {
+        console.log('bar')
+      }
+  
+      module.exports = {
+        bar
+      }
+    },
+    { './foo.js': 2 }
+  ]
 })
