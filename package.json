@@ -1,0 +1,16 @@
+{
+  "name": "my-wbepack",
+  "type": "module",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "git@github.com:havebear/my-wbepack.git",
+  "author": "havebear <616749285@qq.com>",
+  "license": "MIT",
+  "dependencies": {
+    "@babel/parser": "^7.17.3",
+    "@babel/traverse": "^7.17.3",
+    "babel-core": "^6.26.3",
+    "babel-preset-env": "^1.7.0",
+    "ejs": "^3.1.6"
+  }
+}

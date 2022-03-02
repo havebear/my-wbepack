@@ -1,0 +1,1 @@
+import childB from './child-b.js'
