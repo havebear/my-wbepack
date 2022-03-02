@@ -32,4 +32,7 @@ fs.readFileSync('./example/main.js', { encoding: 'utf-8' })
 
 通过 @babel/traverse 遍历 AST
 
+### EJS
 
+<%= 转义
+<%- 不转义

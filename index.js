@@ -48,7 +48,7 @@ function createAsset (filePath) {
 
   return {
     filePath,
-    source,
+    code,
     deps
   }
 }
@@ -86,7 +86,16 @@ function createGraph () {
 function build (graph) {
 
   const template = fs.readFileSync('./bundle.ejs', { encoding: 'utf-8' })
-  const code = ejs.render(template)
+  // 模板数据
+  const data = graph.map(({ filePath, code }) => {
+    return {
+      filePath,
+      code
+    }
+  })
+  const code = ejs.render(template, { data })
+
+  // console.log(data)
 
   fs.writeFileSync('./dist/bundle.js', code)
   

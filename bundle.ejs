@@ -12,22 +12,7 @@
 
   require('./main.js')
 })({
-  './foo.js': function (require, module, exports) {
-    function foo () {
-      console.log('foo')
-    }
-
-    module.exports = {
-      foo
-    }
-  },
-  './bar.js': function (require, module, exports) {
-    function bar () {
-      console.log('bar')
-    }
-
-    module.exports = {
-      bar
-    }
+  '<%- data[0]['filePath'] %>': function (require, module, exports) {
+    <%- data[0]['code'] %>
   }
 })
