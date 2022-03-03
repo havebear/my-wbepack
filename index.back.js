@@ -3,20 +3,7 @@ import path from 'path'
 import parser from '@babel/parser'
 import traverse from '@babel/traverse'
 import ejs from 'ejs'
-import { jsonLoader } from './json-loader.js'
 import { transformFromAst } from 'babel-core'
-
-/** 配置 */
-const webpackConfig = {
-  module: {
-    rules: [
-      {
-        test: /\.json$/,
-        use: jsonLoader
-      }
-    ]
-  }
-}
 
 let id = 0
 
@@ -30,24 +17,9 @@ let id = 0
 function createAsset (filePath) {
 
   // 获取文件内容
-  let source = fs.readFileSync(filePath, { encoding: 'utf-8' })
+  const source = fs.readFileSync(filePath, { encoding: 'utf-8' })
 
   // console.log(source)
-
-  /** initLoader */
-  const loaders = webpackConfig.module.rules
-
-  loaders.forEach(({ test, use }) => {
-    if (test.test(filePath)) {
-      if (Array.isArray(use)) {
-        [ ...use.reverse ].resolve.forEach(fn => {
-          source = fn(source)
-        })
-      } else {
-        source = use(source)
-      }
-    }
-  })
   
   /**
    * 获取依赖关系
