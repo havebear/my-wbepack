@@ -36,15 +36,20 @@ function createAsset (filePath) {
 
   /** initLoader */
   const loaders = webpackConfig.module.rules
+  const loaderContext = {
+    addDeps (dep) {
+      console.log(dep)
+    }
+  }
 
   loaders.forEach(({ test, use }) => {
     if (test.test(filePath)) {
       if (Array.isArray(use)) {
         [ ...use.reverse ].resolve.forEach(fn => {
-          source = fn(source)
+          source = fn.call(loaderContext, source)
         })
       } else {
-        source = use(source)
+        source = use.call(loaderContext, source)
       }
     }
   })
