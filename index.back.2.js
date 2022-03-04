@@ -3,12 +3,8 @@ import path from 'path'
 import parser from '@babel/parser'
 import traverse from '@babel/traverse'
 import ejs from 'ejs'
-import { transformFromAst } from 'babel-core'
 import { jsonLoader } from './json-loader.js'
-import { ChangeOutputPath } from './change-output-path.js'
-import { SyncHook } from 'tapable'
-
-let id = 0
+import { transformFromAst } from 'babel-core'
 
 /** 配置 */
 const webpackConfig = {
@@ -19,15 +15,10 @@ const webpackConfig = {
         use: jsonLoader
       }
     ]
-  },
-  plugins: [
-    new ChangeOutputPath()
-  ]
+  }
 }
 
-const hooks = {
-  emitFile: new SyncHook(['context'])
-}
+let id = 0
 
 // console.log(traverse)
 
@@ -123,14 +114,6 @@ function createGraph () {
   return queue
 }
 
-function initPlugins () {
-  const plugins = webpackConfig.plugins
-
-  plugins.forEach(plugin => plugin.apply(hooks))
-}
-
-initPlugins()
-
 // const graph = createGraph()
 // console.log(graph)
 
@@ -151,19 +134,9 @@ function build (graph) {
   })
   const code = ejs.render(template, { data })
 
-  let outputPath = './dist/bundle.js'
-
-  const pluginContext = {
-    changeOutputPath (path) {
-      outputPath = path
-    }
-  }
-
   // console.log(data)
-  // 发射事件
-  hooks.emitFile.call(pluginContext)
 
-  fs.writeFileSync(outputPath, code)
+  fs.writeFileSync('./dist/bundle.js', code)
   
   // console.log(template)
 }
